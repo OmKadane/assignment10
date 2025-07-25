@@ -1,0 +1,43 @@
+# .github/workflows/multi-env-deploy.yml
+
+name: Deploy to Dev and Staging Environments
+
+# 1. Trigger the workflow on pushes to the 'dev' and 'staging' branches
+on:
+  push:
+    branches:
+      - dev
+      - staging
+
+jobs:
+  # 2. This job deploys to the DEVELOPMENT environment
+  deploy-dev:
+    # 3. This 'if' condition ensures the job ONLY runs for the 'dev' branch
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    environment:
+      name: development # 4. Defines the environment in GitHub
+      url: https://dev.example.com # Optional: URL for the environment
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy to Development
+        run: |
+          echo "Deploying to the DEVELOPMENT server..."
+          echo "Branch: ${{ github.ref_name }}"
+
+  # 5. This job deploys to the STAGING environment
+  deploy-staging:
+    # 6. This 'if' condition ensures the job ONLY runs for the 'staging' branch
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging # 7. Defines a separate environment
+      url: https://staging.example.com
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to the STAGING server..."
+          echo "Branch: ${{ github.ref_name }}"
